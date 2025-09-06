@@ -9,6 +9,9 @@ from llama_index.core import download_loader
 from llama_index.core import VectorStoreIndex
 from llama_index.vector_stores.deeplake import DeepLakeVectorStore
 from llama_index.core.storage.storage_context import StorageContext
+from llama_index.core.retrievers import VectorIndexRetriever
+from llama_index.core.query_engine import RetrieverQueryEngine
+from llama_index.core.postprocessor import SimilarityPostprocessor
 import re
 
 def parse_github_url(url):
@@ -82,6 +85,8 @@ vector_store = DeepLakeVectorStore(
 
 storage_context = StorageContext.from_defaults(vector_store=vector_store)
 index = VectorStoreIndex.from_documents(docs, storage_context=storage_context)
+from llama_index.core.retrievers import VectorIndexRetriever
+retriever = VectorIndexRetriever(index=index, similarity_top_k=4)
 query_engine = index.as_query_engine()
 
 # Include a simple question to test.
@@ -113,3 +118,30 @@ if __name__ == "__main__":
             verbose=False,
             concurrent_requests=10,
         )
+    
+    # ====== Create vector store and upload data ======
+    vector_store = DeepLakeVectorStore(
+        dataset_path=dataset_path,
+        overwrite=True,
+        runtime={"tensor_db": True},
+    )
+
+    storage_context = StorageContext.from_defaults(vector_store=vector_store)
+    index = VectorStoreIndex.from_documents(docs, storage_context=storage_context)
+    
+    retriever = VectorIndexRetriever(index=index, similarity_top_k=4)
+    query_engine = index.as_query_engine()
+    
+    response_synthesizer = get_response_synthesizer()
+    query_engine = RetrieverQueryEngine.from_args(
+        retriever=retriever,
+        response_mode='default',
+        response_synthesizer=response_synthesizer,
+        node_postprocessors=[
+            SimilarityPostprocessor(similarity_cutoff=0.7)]
+    )
+    
+    response = query_engine.query(
+        "what code is in this repository?"
+    )
+    response.response

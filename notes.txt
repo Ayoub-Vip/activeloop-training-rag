@@ -1,0 +1,9 @@
+https://en.wikipedia.org/wiki/Okapi_BM25 : a ranking function that is used to estimate relevent docs, when their relevence depends heavely on specific terms (lexicon)/words.
+
+
+https://www.promptingguide.ai/techniques/fewshot : many prompt engineering techniques like few-shot, chainofthought, self-consistency, active prompt, tree of thoughts µ, reflextion....
+
+
+
+you can boost RAG, by applying 'deep memory' to transform the embedding/vector representation of sentence/docs stored in vector_story.
+Central to its functionality is an embedding transformation process. Deep Memory trains a model that transforms embeddings into a space optimized for your use case. This reconfiguration significantly improves vector search accuracy.
