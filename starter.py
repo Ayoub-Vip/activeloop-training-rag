@@ -19,8 +19,8 @@ from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.core.retrievers import VectorIndexRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
 from llama_index.core.response_synthesizers import get_response_synthesizer
-from llama_index.core.postprocessor import SimilarityPostprocessor
-# from llma_index.cohere_reranker import CohereReranker
+from llama_index.core.postprocessor import SimilarityPostprocessor, LongContextReorder
+from llama_index.core.prompts import LangchainPromptTemplate
 from llama_index.core.evaluation import generate_question_context_pairs
 
 from config import VECTOR_STORE_DIR, DATA_DIR, ParserParams
@@ -43,27 +43,30 @@ docs = loader.load_data()
 # nodes = node_parser.get_nodes_from_documents(documents=docs)
 
 db = chromadb.PersistentClient(path=VECTOR_STORE_DIR / "chroma_db")
-# chroma_client = chromadb.EphemeralClient()
 chroma_collection = db.get_or_create_collection(name="quick_collection")
+
 vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
 service_context = ServiceContext() #llm and embed_moel globally set 
 storage_context = StorageContext.from_defaults(vector_store=vector_store)
-text_splitter = SentenceSplitter()
+text_splitter = SentenceSplitter() # chunk size and ovelap are set globally
 index = VectorStoreIndex(nodes=docs, service_context=service_context,
                          storage_context=storage_context,
                          transformations=[
-                                            text_splitter
+                             text_splitter,
                             ],
                          show_progress=True)
 
 retriever = VectorIndexRetriever(index=index, similarity_top_k=15)
+prompt = LangchainPromptTemplate()
 response_synthesizer = get_response_synthesizer()
 query_engine = RetrieverQueryEngine.from_args(
                     retriever=retriever,
                     response_synthesizer=response_synthesizer,
                     node_postprocessors=[
-                        SimilarityPostprocessor(similarity_cutoff=0.7)
-                    ]
+                        SimilarityPostprocessor(similarity_cutoff=0.7),
+                        LongContextReorder()
+                    ],
+                    response_mode=
                 )
 
 ######################## Evaluation ########################
