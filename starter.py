@@ -57,7 +57,9 @@ index = VectorStoreIndex(nodes=docs, service_context=service_context,
                          show_progress=True)
 
 retriever = VectorIndexRetriever(index=index, similarity_top_k=15)
-prompt = LangchainPromptTemplate()
+prompt = LangchainPromptTemplate(
+    # prompt_type=
+)
 response_synthesizer = get_response_synthesizer()
 query_engine = RetrieverQueryEngine.from_args(
                     retriever=retriever,
@@ -66,9 +68,16 @@ query_engine = RetrieverQueryEngine.from_args(
                         SimilarityPostprocessor(similarity_cutoff=0.7),
                         LongContextReorder()
                     ],
-                    response_mode=
+                    response_mode=None,
                 )
 
 ######################## Evaluation ########################
 context_questions = generate_question_context_pairs(docs)
 print(context_questions.model_dump_json())
+
+
+
+
+#########################  AGENT PART   ########################
+# see agents/agent_starter.py
+
