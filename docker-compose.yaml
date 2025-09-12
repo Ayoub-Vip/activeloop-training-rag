@@ -1,0 +1,22 @@
+services:
+  chroma:
+    build:
+      image: chromadb/chroma:latest
+    container_name: chroma_db
+    ports:
+      - 8000:8000
+    volumes:
+      "vector_stores/chroma_db:/data/"
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: api_app_flask
+    ports:
+      - 5601:5601
+    depends_on:
+      - chroma
+
+volumes:
+  vector_stores/chroma_db:

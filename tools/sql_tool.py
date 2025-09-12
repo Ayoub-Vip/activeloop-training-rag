@@ -1,0 +1,1 @@
+# sql database queries functions to insert new extracted information from doc like (author, doc class, parts, ) into a structured database (sqlLite, postgre, sql, mongodb...)
