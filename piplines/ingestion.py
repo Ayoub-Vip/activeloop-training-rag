@@ -8,5 +8,6 @@ from pydantic import Field, PrivateAttr
 
 from llama_index.vector_stores.chroma import ChromaVectorStore
 
-from ..config import ECTOR_STORE_DIR, DATA_DIR, ParserParams
+from ..config import VECTOR_STORE_DIR, DATA_DIR, ParserParams
 from ..loaders import *
+

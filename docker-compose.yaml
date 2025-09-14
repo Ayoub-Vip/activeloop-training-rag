@@ -8,10 +8,9 @@ services:
     volumes:
       "vector_stores/chroma_db:/data/"
 
-  api:
+  api_app:
     build:
-      context: ./api
-      dockerfile: Dockerfile
+      image:
     container_name: api_app_flask
     ports:
       - 5601:5601

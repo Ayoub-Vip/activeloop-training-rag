@@ -17,9 +17,10 @@ loader = SharePointReader(
     client_secret=env('SHAREPOINT_CLIENT_SECRET'),
     tenant_id=env('SHAREPOINT_TENANT_ID')
 )
+files_list = loader.list_resources()
 
 documents = loader.load_data(
-    sharepoint_site_name=env(''),
-    sharepoint_folder_path=env(''),
+    # sharepoint_site_name=env(''),
+    # sharepoint_folder_path=env(''),
     recursive=True,
 )

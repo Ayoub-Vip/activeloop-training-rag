@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from llama_index.core.agent.workflow import BaseWorkflowAgent
+from llama_index.core.agent.workflow import BaseWorkflowAgent, FunctionAgent
 
 class Agent(ABC):
     def __init__(
@@ -9,4 +9,8 @@ class Agent(ABC):
         prompt,
         
         ):
-        self._agent = BaseWorkflowAgent()
+        self._agent = FunctionAgent()
+        
+    
+        
+    

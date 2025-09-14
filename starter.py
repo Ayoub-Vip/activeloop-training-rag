@@ -44,7 +44,6 @@ docs = loader.load_data()
 
 db = chromadb.PersistentClient(path=VECTOR_STORE_DIR / "chroma_db")
 chroma_collection = db.get_or_create_collection(name="quick_collection")
-
 vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
 service_context = ServiceContext() #llm and embed_moel globally set 
 storage_context = StorageContext.from_defaults(vector_store=vector_store)
